@@ -64,9 +64,9 @@ export function ContactCard() {
 							Either email me at{' '}
 							<a
 								className="text-cyan-600 hover:underline"
-								href="mailto:aamini1024@gmail.com"
+								href="mailto:chappell.charli.olivia.bratty.slut420@yahoo.edu"
 							>
-								aamini1024@gmail.com
+								chappell.charli.olivia.bratty.slut420@yahoo.edu
 							</a>{' '}
 							or fill out the form below
 						</CardDescription>

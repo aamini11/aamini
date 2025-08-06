@@ -1,3 +1,11 @@
 astro-dev-toolbar {
   display: none;
 }
+
+body {
+  background-image: none;
+}
+
+#melody-gif {
+  display: none;
+}

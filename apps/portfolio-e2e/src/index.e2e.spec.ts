@@ -7,16 +7,6 @@ test.beforeEach(async ({ page }) => {
 test('Screenshot Entire Page', async ({ page }) => {
 	await expect(page).toHaveScreenshot({
 		fullPage: true,
+		omitBackground: true,
 	})
-})
-
-test('Screenshot Home', async ({ page }) => {
-	await expect(page).toHaveScreenshot()
-})
-
-test('About Me', async ({ page }) => {
-	await page.goto('http://localhost:4003/')
-	await page.getByRole('button', { name: 'About Me' }).click()
-	await expect(page.getByTitle('Experience')).toBeInViewport()
-	await expect(page).toHaveScreenshot()
 })

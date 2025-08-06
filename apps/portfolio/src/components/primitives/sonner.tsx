@@ -1,15 +1,9 @@
-'use client'
-
-import { useStore } from '@nanostores/react'
 import { Toaster as Sonner, type ToasterProps } from 'sonner'
-import { theme } from '@/lib/store'
 
 const Toaster = ({ ...props }: ToasterProps) => {
-	const $theme = useStore(theme)
-
 	return (
 		<Sonner
-			theme={($theme as ToasterProps['theme']) ?? 'system'}
+			theme="light"
 			style={{ fontFamily: 'inherit', overflowWrap: 'anywhere' }}
 			toastOptions={{
 				unstyled: true,

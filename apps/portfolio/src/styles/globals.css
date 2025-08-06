@@ -1,33 +1,23 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
   --header-size: 4.25rem;
   --shadow-size: 4px;
+  --pastel-pink: oklch(90% 0.05 330);
+  --hot-pink: oklch(70% 0.25 330);
 
-  --main: oklch(79.76% 0.2044 153.08);
+  --main: var(--pastel-pink);
   --main-foreground: oklch(0% 0 0);
-  --background: oklch(96.47% 0.0401 157.79);
-  --secondary-background: oklch(100% 0 0);
-  --foreground: oklch(0% 0 0);
+  --background: var(--pastel-pink);
+  --secondary-background: var(--pastel-pink);
+  --foreground: var(--hot-pink);
   --border: oklch(0% 0 0);
   --ring: oklch(0% 0 0);
   --overlay: oklch(0% 0 0 / 0.8);
   --destructive: oklch(0.577 0.245 27.325);
-}
-
-.dark {
-  --main: oklch(73.03% 0.1865 153.23);
-  --main-foreground: oklch(0% 0 0);
-  --background: oklch(22.45% 0.0316 158.41);
-  --secondary-background: oklch(23.93% 0 0);
-  --foreground: oklch(92.49% 0 0);
-  --border: oklch(0% 0 0);
-  --ring: oklch(100% 0 0);
-  --overlay: oklch(0% 0 0 / 0.8);
-  --destructive: oklch(0.704 0.191 22.216);
 }
 
 @theme inline {
@@ -45,8 +35,10 @@
 
   --font-weight-base: 500;
   --font-weight-heading: 700;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans:
+    'Brush Script MT', cursive; /* Changed to Brush Script MT, with cursive as fallback */
+  --font-mono:
+    'Brush Script MT', cursive; /* Changed to Brush Script MT, with cursive as fallback */
 
   --animate-bounce-up: bounce-up 1s infinite;
   @keyframes bounce-up {
@@ -71,7 +63,12 @@
   }
 
   body {
-    @apply text-foreground font-base bg-background min-h-screen min-w-xs;
+    @apply text-foreground font-base min-w-xs min-h-screen;
+    background-image: url('/sparkly.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
   }
 
   h1,
@@ -129,11 +126,11 @@
     }
   }
 
-  &[data-state="open"] {
+  &[data-state='open'] {
     animation: collapsible-down 0.1s ease-in-out;
   }
 
-  &[data-state="closed"] {
+  &[data-state='closed'] {
     animation: collapsible-up 0.2s ease-in-out;
   }
 }
