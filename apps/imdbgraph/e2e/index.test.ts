@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test'
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page, context }) => {
 	await page.goto('/')
-	await page.routeFromHAR('./__mocks__/hars/search.har', {
+	await context.routeFromHAR('./__mocks__/hars/search.har', {
 		url: '*/**/api/suggestions',
 		update: false,
 	})
