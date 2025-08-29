@@ -23,8 +23,14 @@ import Font from 'astro/components/Font.astro'
 		/>
 		<Font cssVariable="--font-inter" preload />
 		<script>
-			import { initPosthog } from '@/lib/analytics'
-			initPosthog()
+			import posthog from 'posthog-js'
+
+			posthog.init('phc_4TAfNk2E0Xb2v8QwmkWwu8lYtLdDpyG2028qGb2JAXX', {
+				api_host: '/api/analytics',
+				ui_host: 'https://us.posthog.com',
+				defaults: '2025-05-24',
+				person_profiles: 'always',
+			})
 		</script>
 		<script is:inline>
 			const getThemePreference = () => {
