@@ -5,17 +5,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Common Development Commands
 
 ### Build and Development
+
 - `pnpm build` - Build all applications using Turborepo
-- `pnpm dev` - Start development servers for all applications  
+- `pnpm dev` - Start development servers for all applications
 - `pnpm --filter <app-name> dev` - Start specific application (e.g., `pnpm --filter portfolio dev`)
 
 ### Code Quality
+
 - `pnpm lint` - Run oxlint with type-awareness and zero warnings policy
 - `pnpm format` - Check code formatting with Prettier
 - `pnpm format:fix` - Fix code formatting issues
 - `pnpm typecheck` - Run TypeScript type checking across all projects
 
 ### Testing
+
 - `pnpm test` - Run unit tests using Vitest
 - `pnpm test:projects` - Run unit tests in workspace root
 - `pnpm test:projects:watch` - Watch mode for unit tests
@@ -23,6 +26,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm e2e:update` - Update Playwright test snapshots
 
 ### Full Verification
+
 - `pnpm verify` - Run complete CI pipeline (format, build, lint, test, typecheck, e2e)
 
 ## Architecture Overview
@@ -30,11 +34,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a monorepo containing three main applications and shared libraries:
 
 ### Applications (`apps/`)
+
 - **dota-visualizer** (port 4001): Dota 2 statistics and visualization app
 - **imdbgraph** (port 4002): Interactive IMDB data visualization tool with database
 - **portfolio** (port 4003): Professional portfolio website
 
 ### Shared Libraries (`libs/`)
+
 - **config-typescript**: Shared TypeScript configurations
 - **config-vitest**: Vitest testing configuration
 - **ui**: Reusable React components with ShadcnUI and theming support
@@ -53,16 +59,19 @@ This is a monorepo containing three main applications and shared libraries:
 ## Application-Specific Notes
 
 ### imdbgraph
+
 - Requires `DATABASE_URL` and `CRON_SECRET` environment variables for build
 - Uses Drizzle ORM for database operations
 - Has database migrations in `db/migrations/`
 
-### portfolio  
+### portfolio
+
 - Requires `MAILGUN_API_KEY` and `MAILGUN_DOMAIN` for contact form
 - Contains resume PDF and skill/company assets in `public/`
 - Uses server actions for form handling
 
 ### dota-visualizer
+
 - Focuses on game statistics visualization
 - Uses external API for Dota 2 data
 
