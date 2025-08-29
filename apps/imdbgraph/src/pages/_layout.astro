@@ -3,7 +3,6 @@ import '@aamini/ui/globals.css'
 import { ThemeButton } from '@/components/theme-button'
 import '@fontsource-variable/inter'
 import Font from 'astro/components/Font.astro'
-import Analytics from '@/lib/analytics/client.astro'
 ---
 
 <html lang="en">
@@ -23,7 +22,10 @@ import Analytics from '@/lib/analytics/client.astro'
       episode"
 		/>
 		<Font cssVariable="--font-inter" preload />
-		<Analytics />
+		<script>
+			import { initPosthog } from '@/lib/analytics'
+			initPosthog()
+		</script>
 		<script is:inline>
 			const getThemePreference = () => {
 				if (

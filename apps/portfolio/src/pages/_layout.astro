@@ -1,6 +1,5 @@
 ---
 import { Toaster } from '@/components/sonner'
-import Analytics from '@/lib/analytics/client.astro'
 import '@aamini/ui/neobrutalist.css'
 import Font from 'astro/components/Font.astro'
 ---
@@ -16,7 +15,10 @@ import Font from 'astro/components/Font.astro'
 			content="Portfolio of Aria Amini, a software engineer."
 		/>
 		<Font cssVariable="--font-inter" preload />
-		<Analytics />
+		<script>
+			import { initPosthog } from '@/lib/analytics'
+			initPosthog()
+		</script>
 	</head>
 	<body class="antialiased">
 		<slot />

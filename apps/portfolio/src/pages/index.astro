@@ -6,7 +6,6 @@ import Pdf from '@/components/icons/pdf.svg'
 import { JobBubble } from '@/components/job-bubble'
 import { Section } from '@/components/section'
 import { SkillBubble } from '@/components/skill-bubble'
-import { logVisit } from '@/lib/analytics/server'
 import { jobs } from '@/lib/jobs'
 import { skills } from '@/lib/skills'
 import Layout from '@/pages/_layout.astro'
@@ -18,10 +17,18 @@ import { ArrowDown } from 'lucide-react'
 
 export const prerender = false
 
-const ref = Astro.url.searchParams.get('ref')
+// Log and remove ref tracker
+const containsUtm = Astro.url.searchParams
+	.entries()
+	.find(([key, _value]) => key.startsWith('utm_'))
 
-if (ref) {
-	logVisit(ref)
+if (containsUtm) {
+	for (const [key, _value] of Astro.url.searchParams.entries()) {
+		if (key.startsWith('utm_')) {
+			Astro.url.searchParams.delete(key)
+		}
+	}
+	return Astro.redirect('/')
 }
 ---
 
