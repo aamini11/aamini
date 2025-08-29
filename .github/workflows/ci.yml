@@ -18,12 +18,11 @@ on:
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      apps: ${{ steps.get-apps.outputs.apps }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -31,18 +30,33 @@ jobs:
         uses: ./.github/actions/setup
       - name: Build
         run: pnpm turbo run build format typecheck lint test
+
+  find-changed-apps:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.get-changed-apps.outputs.apps }}
+    steps:
+      # Setup
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: ./.github/actions/setup
       - name: Get Changed Apps
-        id: get-apps
+        id: get-changed-apps
         run: |
-          APPS=$(pnpm turbo ls --output=json --filter="./apps/*" | jq -c '[.packages.items[] | .name]')
+          APPS=$(pnpm turbo ls --output=json --affected | jq -c '.packages.items | map(select(.path | startswith("apps/")) | .name)')
+          echo $APPS
           echo "apps=$APPS" >> $GITHUB_OUTPUT
 
   deploy:
-    needs: [build]
+    needs: [find-changed-apps]
     runs-on: ubuntu-latest
+    if: ${{ needs.find-changed-apps.outputs.apps != '[]' }}
     strategy:
       matrix:
-        app: ${{ fromJson(needs.build.outputs.apps) }}
+        app: ${{ fromJson(needs.find-changed-apps.outputs.apps) }}
     steps:
       # Setup
       - name: Checkout Code
@@ -60,11 +74,12 @@ jobs:
         run: vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }} ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
 
   e2e:
-    needs: [build, deploy]
+    needs: [find-changed-apps, deploy]
     runs-on: windows-latest
+    if: ${{ needs.find-changed-apps.outputs.apps != '[]' }}
     strategy:
       matrix:
-        app: ${{ fromJson(needs.build.outputs.apps) }}
+        app: ${{ fromJson(needs.find-changed-apps.outputs.apps) }}
     steps:
       # Setup
       - name: Checkout Code
