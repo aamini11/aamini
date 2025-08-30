@@ -29,34 +29,12 @@ jobs:
       - name: Setup Node
         uses: ./.github/actions/setup
       - name: Build
-        run: pnpm turbo run build format typecheck lint test
-
-  find-changed-apps:
-    runs-on: ubuntu-latest
-    outputs:
-      apps: ${{ steps.get-changed-apps.outputs.apps }}
-    steps:
-      # Setup
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup Node
-        uses: ./.github/actions/setup
-      - name: Get Changed Apps
-        id: get-changed-apps
-        run: |
-          APPS=$(pnpm turbo ls --output=json --affected | jq -c '.packages.items | map(select(.path | startswith("apps/")) | .name)')
-          echo $APPS
-          echo "apps=$APPS" >> $GITHUB_OUTPUT
+        run: pnpm turbo run format typecheck lint test
 
   deploy:
-    needs: [find-changed-apps]
     runs-on: ubuntu-latest
-    if: ${{ needs.find-changed-apps.outputs.apps != '[]' }}
-    strategy:
-      matrix:
-        app: ${{ fromJson(needs.find-changed-apps.outputs.apps) }}
+    outputs:
+      apps: ${{ steps.generate-change-set.outputs }}
     steps:
       # Setup
       - name: Checkout Code
@@ -67,19 +45,24 @@ jobs:
       - name: Install Vercel CLI
         run: pnpm add --global vercel@latest
       - name: Link To Project
-        working-directory: ./apps/${{ matrix.app }}
         run: vercel link --yes --repo --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }}
       - name: Deploy To Vercel
-        working-directory: ./apps/${{ matrix.app }}
-        run: pnpm turbo deploy -- -- --yes --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }} ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
+        run: pnpm run deploy -- --yes --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }} ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
+      # Collect
+      - name: Get Changed Apps
+        id: generate-change-set
+        run: |
+          APPS=$(pnpm turbo ls --output=json --affected | jq -c '.packages.items | map(select(.path | startswith("apps/")) | .name)')
+          echo $APPS
+          echo "apps=$APPS" >> $GITHUB_OUTPUT
 
   e2e:
-    needs: [find-changed-apps, deploy]
+    needs: [deploy]
     runs-on: windows-latest
-    if: ${{ needs.find-changed-apps.outputs.apps != '[]' }}
+    if: ${{ needs.deploy.outputs.apps != '[]' }}
     strategy:
       matrix:
-        app: ${{ fromJson(needs.find-changed-apps.outputs.apps) }}
+        app: ${{ fromJson(needs.deploy.outputs.apps) }}
     steps:
       # Setup
       - name: Checkout Code
