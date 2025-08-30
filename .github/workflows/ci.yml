@@ -71,7 +71,7 @@ jobs:
         run: vercel link --yes --repo --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }}
       - name: Deploy To Vercel
         working-directory: ./apps/${{ matrix.app }}
-        run: vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }} ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
+        run: turbo deploy -- -- --yes --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }} ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
 
   e2e:
     needs: [find-changed-apps, deploy]
@@ -86,17 +86,17 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Node
         uses: ./.github/actions/setup
-
+      # Browsers
       - name: Install Playwright Browsers
         working-directory: ./apps/${{ matrix.app }}
         run: pnpm exec playwright install --with-deps
-
+      # Tests
       - name: Run Playwright tests
         working-directory: ./apps/${{ matrix.app }}
         env:
           BASE_URL: https://${{ matrix.app }}-git-${{ github.head_ref || github.ref_name }}-${{ vars.TURBO_TEAM }}.vercel.app
         run: pnpm turbo run e2e${{ inputs.update_snapshots && ':update' || '' }}
-
+      # Optional: Update screenshots
       - name: Update Screenshots
         if: ${{ !failure() && inputs.update_snapshots }}
         run: |
@@ -105,7 +105,7 @@ jobs:
           git add "*/*.png"
           git commit -m "Update Screenshots"
           git push
-
+      # Report
       - name: Publish Report
         uses: actions/upload-artifact@v4
         if: ${{ failure() }}
