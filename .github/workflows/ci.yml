@@ -47,7 +47,7 @@ jobs:
       - name: Link To Project
         run: vercel link --yes --repo --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }}
       - name: Deploy To Vercel
-        run: pnpm run deploy -- --yes --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }} ${{ github.ref == 'refs/heads/main' && '--prod' || '' }} -m githubDeployment=“1" -m githubCommitRef=“feature/${{ env.BRANCH_NAME }}”
+        run: pnpm run deploy -- --yes --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }} ${{ github.ref == 'refs/heads/main' && '--prod' || '' }} -m githubDeployment='1' -m githubCommitRef='feature/${{ env.BRANCH_NAME }}'
       # Collect
       - name: Get Changed Apps
         id: generate-change-set
