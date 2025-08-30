@@ -33,7 +33,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     outputs:
-      apps: ${{ steps.generate-change-set.outputs }}
+      apps: ${{ steps.generate-change-set.outputs.apps }}
     steps:
       # Setup
       - name: Checkout Code
