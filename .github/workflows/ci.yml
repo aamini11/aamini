@@ -18,6 +18,7 @@ on:
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:
   build:
@@ -46,7 +47,7 @@ jobs:
       - name: Link To Project
         run: vercel link --yes --repo --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }}
       - name: Deploy To Vercel
-        run: pnpm run deploy -- --yes --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }} ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
+        run: pnpm run deploy -- --yes --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.TURBO_TEAM }} ${{ github.ref == 'refs/heads/main' && '--prod' || '' }} -m githubDeployment=“1" -m githubCommitRef=“feature/${{ env.BRANCH_NAME }}”
       # Collect
       - name: Get Changed Apps
         id: generate-change-set
@@ -78,7 +79,7 @@ jobs:
       - name: Run Playwright tests
         working-directory: ./apps/${{ matrix.app }}
         env:
-          BASE_URL: https://${{ matrix.app }}-git-${{ github.head_ref || github.ref_name }}-${{ vars.TURBO_TEAM }}.vercel.app
+          BASE_URL: https://${{ matrix.app }}-git-${{ env.BRANCH_NAME }}-${{ vars.TURBO_TEAM }}.vercel.app
         run: pnpm turbo run e2e${{ inputs.update_snapshots && ':update' || '' }}
       # Optional: Update screenshots
       - name: Update Screenshots
