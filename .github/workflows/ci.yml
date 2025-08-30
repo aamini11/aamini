@@ -18,7 +18,6 @@ on:
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-  TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
 
 jobs:
   build:
@@ -51,6 +50,8 @@ jobs:
       # Collect
       - name: Get Changed Apps
         id: generate-change-set
+        env:
+          TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
         run: |
           APPS=$(pnpm turbo ls --output=json --affected | jq -c '.packages.items | map(select(.path | startswith("apps/")) | .name)')
           echo $APPS
