@@ -65,6 +65,7 @@ jobs:
       - name: Setup Node
         uses: ./.github/actions/setup
       - name: Deploy to Vercel
+        working-directory: ./apps/${{ matrix.app }}
         run: |
           pnpm i -g vercel
           pnpm run build
