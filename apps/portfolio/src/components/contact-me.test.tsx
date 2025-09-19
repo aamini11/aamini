@@ -1,6 +1,6 @@
-import { ContactCard } from '@/components/contact-me'
+import { ContactCard } from '#/components/contact-me'
 import { userEvent } from '@vitest/browser/context'
-import { expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 
 test('render card', () => {
