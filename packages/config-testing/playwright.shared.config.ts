@@ -94,7 +94,7 @@ export const baseConfig = (
 				{
 					name: 'mobile',
 					use: {
-						...devices['iPhone 12']
+						...devices['iPhone 12'],
 					},
 				},
 
