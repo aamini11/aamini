@@ -94,10 +94,7 @@ export const baseConfig = (
 				{
 					name: 'mobile',
 					use: {
-						...devices['iPhone 12'],
-						launchOptions: {
-							args: ['--disable-lcd-text'],
-						},
+						...devices['iPhone 12']
 					},
 				},
 
