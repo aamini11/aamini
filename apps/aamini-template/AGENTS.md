@@ -8,7 +8,7 @@ code in this repository.
 All commands are run from the root of the project, from a terminal:
 
 | Command                 | Action                                             |
-| :----------------       | :--------------------------------------------------|
+| :---------------------- | :------------------------------------------------- |
 | `pnpm install`          | Installs dependencies                              |
 | `pnpm dev`              | Starts local dev server at `localhost:4000`        |
 | `pnpm build`            | Build your production site to `./dist/`            |
@@ -38,15 +38,15 @@ This is an Astro 5 project with React integration. Key architectural decisions:
 
 - **Unit Tests**: Vitest with two test projects:
   - `unit`: Plain node environment for simple unit tests
-  - `integration`: Groups integration tests involving either database operations 
-	using docker through testcontainers, or UI component tests using vitest browser 
-	mode.
+  - `integration`: Groups integration tests involving either database operations
+    using docker through testcontainers, or UI component tests using vitest
+    browser mode.
   - Runs on `localhost:4000` in development
 
 ## UI/Styling (ShadCN)
 
-- Use the common UI library (@aamini/ui) for reusable components. Install any 
-new components by cd'ing into `<rootDir>/packages/ui` and running 
-`pnpm shadcn $COMPONENT_NAME` (ex: `pnpm shadcn button`).
-- Use tailwind styling for any other changes that need to be made to any of the 
-UI elements.
+- Use the common UI library (@aamini/ui) for reusable components. Install any
+  new components by cd'ing into `<rootDir>/packages/ui` and running
+  `pnpm shadcn $COMPONENT_NAME` (ex: `pnpm shadcn button`).
+- Use tailwind styling for any other changes that need to be made to any of the
+  UI elements.
